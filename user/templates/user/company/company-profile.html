@@ -1,0 +1,215 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>JobLand - {{user.name}}</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/favicon.png' %}"/>
+
+    <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
+
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic" rel="stylesheet"
+          type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css"/>
+
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="{% static 'assets/company/css/styles.css' %}" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static 'assets/css/custom-bs.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/jquery.fancybox.min.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap-select.min.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/fonts/icomoon/style.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/fonts/line-icons/style.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/owl.carousel.min.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/animate.min.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/quill.snow.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css'%}">
+</head>
+
+<body id="page-top">
+
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-success " id="mainNav">
+    <div class="container">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation">
+            Menu
+            <i class="fas fa-bars ml-1"></i>
+        </button>
+
+
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav text-uppercase ml-auto">
+                <li class="nav-item ">
+                    {% if request.user == user and request.user.is_company %}
+                    {% if user.companyprofilemodel.logo %}
+
+                    <a class="nav-link js-scroll-trigger " href="{% url 'home' %}">
+                        <img src="{{user.companyprofilemodel.logo.url}}" style="width:70px;height:50px;">
+                    </a>
+
+                    {% else %}
+                    <a class="nav-link js-scroll-trigger" href="{% url 'home' %}">{{user.name}}</a>
+                    {% endif %}
+                    {% else %}
+                    <a class="nav-link js-scroll-trigger" href="{% url 'home' %}">Go To Home</a>
+
+                    {% endif %}
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#jobs">Jobs</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#about">About</a>
+                </li>
+
+                {% if request.user == user and request.user.is_company %}
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="{% url 'post-job' %}">Post a Job</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="{% url 'company-edit-profile' %}">Edit Details</a>
+                </li>
+                {% endif %}
+
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="{% url 'logout' %}">Log Out </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<!-- Masthead-->
+{% if user.companyprofilemodel.image %}
+<header class="masthead" style="background-image: url('{{ user.companyprofilemodel.image.url }}');">
+    <div class="container">
+        <div class="masthead-subheading" style="color:black;">Welcome To {{user.name}}!!!</div>
+        <div class="masthead-heading text-uppercase" style="color:black;">It's Nice To Meet You</div>
+
+        {% if user.companyprofilemodel.website %}
+        <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger"
+           href="https://{{user.companyprofilemodel.website}}" target="_blank">VISIT US!!</a>
+        {% elif request.user != user %}
+
+        {% elif request.user == user and user.companyprofilemodel.website is None %}
+        <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger"
+           href="{% url 'company-edit-profile' %}"><i class="fa fa-plus"></i> Add Website</a>
+        {% endif %}
+    </div>
+</header>
+{% else %}
+<header class="masthead">
+    <div class="container">
+        <div class="masthead-subheading" style="color:black;">Welcome To {{user.name}}!!!</div>
+        <div class="masthead-heading text-uppercase" style="color:black;">It's Nice To Meet You</div>
+
+        {% if user.companyprofilemodel.website %}
+        <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger"
+           href="https://{{user.companyprofilemodel.website}}" target="_blank">VISIT US!!</a>
+        {% elif request.user != user %}
+
+        {% elif request.user == user and user.companyprofilemodel.website is None %}
+        <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger"
+           href="{% url 'company-edit-profile' %}"><i class="fa fa-plus"></i> Add Website</a>
+        {% endif %}
+    </div>
+</header>
+{% endif %}
+
+
+<!-- Posted Jobs-->
+<section class="page-section" id="jobs">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-heading text-uppercase">Posted Jobs</h2>
+
+            <ul class="job-listings mb-5">
+                {% for job in job_list %}
+                <li class="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
+                    <a href="{% url 'job-profile' job.id %}"></a>
+                    <div class="job-listing-logo">
+                        {% if job.user.companyprofilemodel.logo %}
+                        <img src=" {{job.user.companyprofilemodel.logo.url}}" alt="Image" class="img-fluid">
+                        {% else %}
+                        <img src="" alt="Image" class="img-fluid">
+                        {% endif %}
+                    </div>
+
+                    <div class="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4">
+                        <div class="job-listing-position custom-width w-50 mb-3 mb-sm-0">
+                            <h2>{{job.job_title}}</h2>
+                            <strong>{{job.user.name}}</strong>
+                        </div>
+                        <div class="job-listing-location mb-3 mb-sm-0 custom-width w-25">
+                            <span class="icon-room"></span> {{job.location}}
+                        </div>
+                        <div class="job-listing-meta">
+                            <span class="badge badge-danger">{{job.job_type}}</span>
+                        </div>
+                    </div>
+
+                </li>
+                {% endfor%}
+
+            </ul>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- About-->
+<section class="page-section" id="about">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-heading text-uppercase">About Us</h2>
+            <div>
+                <p>{{user.companyprofilemodel.about|safe}}</p>
+            </div>
+            <br><br>
+            <div>
+                <h5><label><b>Location: </b></label>
+                    {{user.companyprofilemodel.location}}</h5>
+            </div>
+            <div>
+                <h5><label><b>Our Journey Started On: </b></label>
+                    {{user.companyprofilemodel.start_date}}</h5>
+            </div>
+
+        </div>
+    </div>
+    </div>
+</section>
+
+
+{% include "../footer.html" %}
+
+<!-- Bootstrap core JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+<!-- Third party plugin JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+<!-- Contact form JS-->
+<script src="{% static 'assets/company/assets/mail/jqBootstrapValidation.js' %}"></script>
+<script src="{% static 'assets/company/assets/mail/contact_me.js' %}"></script>
+<!-- Core theme JS-->
+<script src="{% static 'assets/company/js/scripts.js' %}"></script>
+
+
+{% include "../javascript.html" %}
+</body>
+
+</html>

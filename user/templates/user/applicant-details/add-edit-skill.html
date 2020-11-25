@@ -1,0 +1,125 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <title>JobLand</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/favicon.png' %}"/>
+
+
+    <link rel="stylesheet" href="{% static 'assets/css/custom-bs.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/jquery.fancybox.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap-select.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/fonts/icomoon/style.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/fonts/line-icons/style.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/animate.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/quill.snow.css' %}">
+
+
+    <!-- MAIN CSS -->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+</head>
+<body id="top">
+
+<div id="overlayer"></div>
+<div class="loader">
+    <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
+
+<div class="site-wrap">
+
+    {% include "./mobile-menu.html" %} <!-- .site-mobile-menu -->
+
+    <!-- NAVBAR -->
+    {% include "./header.html" %}
+
+    <!-- HOME -->
+    <section class="section-hero overlay inner-page bg-image" id="home-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7">
+                    <h1 class="text-white font-weight-bold">Edit Your Skill Set</h1>
+                    <div class="custom-breadcrumbs">
+                        <a href="{% url 'home' %}">Home</a> <span class="mx-2 slash">/</span>
+                        <a href="{% url 'applicant-profile' user.id %}">Profile</a> <span class="mx-2 slash">/</span>
+                        <span class="text-white"><strong>Edit Skill Set</strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="site-section">
+        <div class="container">
+
+            <div class="row align-items-center mb-5">
+                <div class="col-lg-8 mb-4 mb-lg-0">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h2>Edit Skill Set</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-5">
+                <div class="col-lg-12">
+                    <form class="p-4 p-md-5 border rounded" method="post" action="" enctype="multipart/form-data">
+                        <h3 class="text-black mb-5 border-bottom pb-2">Skill Set Details</h3>
+
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label>Skill name</label>
+                            {{form.skill_title}}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Proficiency</label>
+                            {{form.proficiency}}
+                        </div>
+
+                        <div class="col-12">
+                            <button class="btn btn-block btn-primary btn-md" type="submit">Update Skill Set</button>
+                        </div>
+                    </form>
+                </div>
+                {% for message in messages %}
+
+                <div class="alert alert-success">
+                    <a class="close" href="#" data-dismiss="alert">×</a>
+
+                    {{ message }}
+
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+
+    {% include "../footer.html" %}
+
+</div>
+
+<!-- SCRIPTS -->
+{% include "../javascript.html" %}
+
+<script>
+    var form_fields = document.getElementsByTagName("input")
+
+    form_fields[1].placeholder = 'Skill Name'
+
+    for (var i = 1; i < form_fields.length; i++) {
+        form_fields[i].className += ' form-control'
+    }
+</script>
+
+
+</body>
+</html>

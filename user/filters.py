@@ -1,0 +1,12 @@
+import django_filters
+from django_filters import CharFilter
+from job.models import JobModel
+
+
+class JobFilter(django_filters.FilterSet):
+    job_title = CharFilter(field_name='job_title', lookup_expr='icontains')
+    location = CharFilter(field_name='location', lookup_expr='icontains')
+
+    class Meta:
+        model = JobModel
+        fields = ('job_title', 'location', 'job_type')
